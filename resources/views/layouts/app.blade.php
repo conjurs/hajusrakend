@@ -171,7 +171,7 @@
 <body>
     <nav class="navbar navbar-expand-lg bg-custom-dark">
         <div class="container">
-            <a class="navbar-brand" href="/">Hajusrakendused</a>
+            <a class="navbar-brand" href="/public/index.php">Hajusrakendused</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
                     style="border-color: var(--primary-color);">
                 <span class="navbar-toggler-icon"></span>
@@ -179,7 +179,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link {{ Request::is('/') ? 'active' : '' }}" href="/">
+                        <a class="nav-link {{ Request::is('/') ? 'active' : '' }}" href="/public/index.php">
                             <i class="bi bi-house-door"></i> Home
                         </a>
                     </li>

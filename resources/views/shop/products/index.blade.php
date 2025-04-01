@@ -6,7 +6,6 @@
 <div class="row mb-4">
     <div class="col-md-8">
         <h1>Shop</h1>
-        <p>Browse our products and add them to your cart!</p>
     </div>
     <div class="col-md-4 text-end">
         <a href="{{ route('products.create') }}" class="btn btn-outline-cyan me-2">
