@@ -12,7 +12,7 @@ Route::get('/', function () {
     return view('home');
 });
 
-Route::get('/maps', [MarkerController::class, 'index'])->name('markers.index');
+Route::get('/maps', [MarkerController::class, 'index'])->name('maps.index');
 Route::resource('markers', MarkerController::class);
 Route::post('/markers/map', [MarkerController::class, 'storeFromMap'])->name('markers.storeFromMap');
 
