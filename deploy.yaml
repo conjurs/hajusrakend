@@ -1,0 +1,32 @@
+import: 
+  - recipe/laravel.php
+
+config:
+  repository: 'git@github.com:conjurs/cautious.git'
+  keep_releases: 2
+
+hosts:
+  stage:
+    hostname: 'tak22parnoja.itmajakas.ee'
+    http_user: virt118436
+    remote_user: virt118436
+    deploy_path: '~/domeenid/www.tak22parnoja.itmajakas.ee/hajusrakendused'
+
+tasks:
+
+  opcache:clear:
+    - run: killall php84-cgi || true
+
+  deploy:
+    - 'deploy:prepare'
+    - 'deploy:vendors'
+    - 'artisan:storage:link'
+    - 'artisan:optimize:clear'
+    - 'artisan:optimize'
+    - 'deploy:publish'
+
+after:
+  deploy:failed: deploy:unlock
+
+before:
+  deploy:success: opcache:clear
