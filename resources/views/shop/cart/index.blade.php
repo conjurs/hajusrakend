@@ -168,41 +168,6 @@ function updateCartQuantity(itemId, change) {
 
     const unitPrice = parseFloat(cartItem.querySelector('.text-muted.small').textContent.replace('$', ''));
     
-    const newItemTotal = (unitPrice * newQty).toFixed(2);
-    
-    quantityDisplay.textContent = newQty;
-    
-    cartItem.querySelector('.cart-item-total span').textContent = '$' + newItemTotal;
-    
-    const allItemTotals = document.querySelectorAll('.cart-item-total span');
-    let newCartTotal = 0;
-    allItemTotals.forEach(totalSpan => {
-        newCartTotal += parseFloat(totalSpan.textContent.replace('$', ''));
-    });
-    
-    const cartSubtotal = document.querySelector('.cart-summary .text-white');
-    if (cartSubtotal) {
-        cartSubtotal.textContent = '$' + newCartTotal.toFixed(2);
-    }
-    
-    const checkoutTotal = document.querySelector('.order-summary .text-white:last-child');
-    if (checkoutTotal) {
-        checkoutTotal.textContent = '$' + newCartTotal.toFixed(2);
-    }
-    
-    const itemName = cartItem.querySelector('.text-white').textContent;
-    const orderSummaryItems = document.querySelectorAll('.order-summary .d-flex');
-    orderSummaryItems.forEach(item => {
-        const itemText = item.querySelector('.text-muted');
-        if (itemText && itemText.textContent.includes(itemName)) {
-            const itemTotal = item.querySelector('.text-white');
-            if (itemTotal) {
-                itemTotal.textContent = '$' + newItemTotal;
-            }
-            itemText.textContent = itemName + ' × ' + newQty;
-        }
-    });
-    
     const form = new FormData();
     form.append('_token', '{{ csrf_token() }}');
     form.append('quantity', newQty);
@@ -213,6 +178,36 @@ function updateCartQuantity(itemId, change) {
             'X-CSRF-TOKEN': '{{ csrf_token() }}'
         },
         body: form
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            quantityDisplay.textContent = data.quantity;
+            cartItem.querySelector('.cart-item-total span').textContent = '$' + data.itemTotal;
+            
+            const cartSubtotal = document.querySelector('.cart-summary .text-white');
+            if (cartSubtotal) {
+                cartSubtotal.textContent = '$' + data.cartTotal;
+            }
+            
+            const checkoutTotal = document.querySelector('.order-summary .text-white:last-child');
+            if (checkoutTotal) {
+                checkoutTotal.textContent = '$' + data.cartTotal;
+            }
+            
+            const itemName = cartItem.querySelector('.text-white').textContent;
+            const orderSummaryItems = document.querySelectorAll('.order-summary .d-flex');
+            orderSummaryItems.forEach(item => {
+                const itemText = item.querySelector('.text-muted');
+                if (itemText && itemText.textContent.includes(itemName)) {
+                    const itemTotal = item.querySelector('.text-white');
+                    if (itemTotal) {
+                        itemTotal.textContent = '$' + data.itemTotal;
+                    }
+                    itemText.textContent = itemName + ' × ' + data.quantity;
+                }
+            });
+        }
     })
     .catch(error => {
         console.error('Error:', error);

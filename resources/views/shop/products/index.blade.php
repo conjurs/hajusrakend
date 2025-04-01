@@ -8,9 +8,6 @@
         <h1>Shop</h1>
     </div>
     <div class="col-md-4 text-end">
-        <a href="{{ route('products.create') }}" class="btn btn-outline-cyan me-2">
-            <i class="bi bi-plus-lg"></i> Add New Product
-        </a>
         <a href="{{ route('cart.index') }}" class="btn btn-cyan">
             <i class="bi bi-cart"></i> View Cart
         </a>
@@ -23,7 +20,7 @@
         <div class="card h-100">
             <div class="product-image-container">
                 @if($product->image)
-                <img src="{{ asset($product->image) }}" class="card-img-top" alt="{{ $product->name }}">
+                <img src="{{ $product->image }}" class="card-img-top" alt="{{ $product->name }}">
                 @else
                 <div class="card-img-top d-flex align-items-center justify-content-center">
                     <i class="bi bi-image text-muted" style="font-size: 4rem;"></i>
@@ -45,29 +42,17 @@
                     </div>
                 </form>
             </div>
-            <div class="card-footer bg-transparent d-flex justify-content-between">
+            <div class="card-footer bg-transparent">
                 <a href="{{ route('products.show', $product) }}" class="btn btn-sm btn-outline-cyan">
                     <i class="bi bi-eye"></i> Details
                 </a>
-                <div>
-                    <a href="{{ route('products.edit', $product) }}" class="btn btn-sm btn-outline-cyan me-1">
-                        <i class="bi bi-pencil"></i> Edit
-                    </a>
-                    <form action="{{ route('products.destroy', $product) }}" method="POST" class="d-inline">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure?')">
-                            <i class="bi bi-trash"></i> Delete
-                        </button>
-                    </form>
-                </div>
             </div>
         </div>
     </div>
     @empty
     <div class="col-12">
         <div class="alert alert-info">
-            No products found. <a href="{{ route('products.create') }}">Add the first product!</a>
+            No products found.
         </div>
     </div>
     @endforelse
