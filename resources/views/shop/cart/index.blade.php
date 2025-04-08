@@ -158,7 +158,7 @@
 <script>
 function updateCartQuantity(itemId, change) {
     const cartItem = event.target.closest('.cart-item');
-    const quantityDisplay = event.target.parentElement.querySelector('.quantity-display');
+    const quantityDisplay = cartItem.querySelector('.quantity-display');
     const currentQty = parseInt(quantityDisplay.textContent);
     const newQty = Math.max(1, Math.min(10, currentQty + change));
     
@@ -166,8 +166,6 @@ function updateCartQuantity(itemId, change) {
         return;
     }
 
-    const unitPrice = parseFloat(cartItem.querySelector('.text-muted.small').textContent.replace('$', ''));
-    
     const form = new FormData();
     form.append('_token', '{{ csrf_token() }}');
     form.append('quantity', newQty);
@@ -181,37 +179,34 @@ function updateCartQuantity(itemId, change) {
     })
     .then(response => response.json())
     .then(data => {
-        if (data.success) {
-            quantityDisplay.textContent = data.quantity;
-            cartItem.querySelector('.cart-item-total span').textContent = '$' + data.itemTotal;
-            
-            const cartSubtotal = document.querySelector('.cart-summary .text-white');
-            if (cartSubtotal) {
-                cartSubtotal.textContent = '$' + data.cartTotal;
-            }
-            
-            const checkoutTotal = document.querySelector('.order-summary .text-white:last-child');
-            if (checkoutTotal) {
-                checkoutTotal.textContent = '$' + data.cartTotal;
-            }
-            
-            const itemName = cartItem.querySelector('.text-white').textContent;
-            const orderSummaryItems = document.querySelectorAll('.order-summary .d-flex');
-            orderSummaryItems.forEach(item => {
-                const itemText = item.querySelector('.text-muted');
-                if (itemText && itemText.textContent.includes(itemName)) {
-                    const itemTotal = item.querySelector('.text-white');
-                    if (itemTotal) {
-                        itemTotal.textContent = '$' + data.itemTotal;
-                    }
-                    itemText.textContent = itemName + ' × ' + data.quantity;
-                }
-            });
+        quantityDisplay.textContent = data.quantity;
+        cartItem.querySelector('.cart-item-total span').textContent = '$' + data.itemTotal;
+        
+        const cartSubtotal = document.querySelector('.cart-summary .text-white');
+        if (cartSubtotal) {
+            cartSubtotal.textContent = '$' + data.cartTotal;
         }
+        
+        const checkoutTotal = document.querySelector('.order-summary .text-white:last-child');
+        if (checkoutTotal) {
+            checkoutTotal.textContent = '$' + data.cartTotal;
+        }
+        
+        const itemName = cartItem.querySelector('.text-white').textContent;
+        const orderSummaryItems = document.querySelectorAll('.order-summary .d-flex');
+        orderSummaryItems.forEach(item => {
+            const itemText = item.querySelector('.text-muted');
+            if (itemText && itemText.textContent.includes(itemName)) {
+                const itemTotal = item.querySelector('.text-white');
+                if (itemTotal) {
+                    itemTotal.textContent = '$' + data.itemTotal;
+                }
+                itemText.textContent = itemName + ' × ' + data.quantity;
+            }
+        });
     })
     .catch(error => {
         console.error('Error:', error);
-        quantityDisplay.textContent = currentQty;
         location.reload();
     });
 }

@@ -5,16 +5,21 @@ namespace App\Http\Controllers;
 use App\Models\Blog;
 use App\Models\Comment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CommentController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth')->except(['index', 'show']);
+        $this->middleware('admin')->only(['destroy']);
+    }
 
     public function index()
     {
-        $comments = Comment::with('blog')->latest()->paginate(20);
+        $comments = Comment::with(['blog', 'user'])->latest()->paginate(20);
         return view('comments.index', compact('comments'));
     }
-
 
     public function create()
     {
@@ -29,6 +34,7 @@ class CommentController extends Controller
             'content' => 'required|string',
         ]);
         
+        $validated['user_id'] = Auth::id();
         Comment::create($validated);
         
         return redirect()->route('blogs.show', $validated['blog_id'])->with('success', 'Comment added successfully');
@@ -41,12 +47,14 @@ class CommentController extends Controller
 
     public function edit(Comment $comment)
     {
+        $this->authorize('update', $comment);
         $blogs = Blog::all();
         return view('comments.edit', compact('comment', 'blogs'));
     }
 
     public function update(Request $request, Comment $comment)
     {
+        $this->authorize('update', $comment);
         $validated = $request->validate([
             'content' => 'required|string',
         ]);
@@ -58,6 +66,7 @@ class CommentController extends Controller
 
     public function destroy(Comment $comment)
     {
+        $this->authorize('delete', $comment);
         $blogId = $comment->blog_id;
         $comment->delete();
         return redirect()->route('blogs.show', $blogId)->with('success', 'Comment deleted successfully');

@@ -4,14 +4,24 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use App\Models\Cart;
+use App\Traits\CartSession;
 
 class ProductController extends Controller
 {
+    use CartSession;
 
     public function index()
     {
         $products = Product::all();
-        return view('shop.products.index', compact('products'));
+        $cart = Cart::where('session_id', $this->getCartSessionId())->first();
+        $cartQuantities = [];
+        
+        if ($cart) {
+            $cartQuantities = $cart->items->pluck('quantity', 'product_id')->toArray();
+        }
+        
+        return view('shop.products.index', compact('products', 'cartQuantities'));
     }
 
     public function create()
@@ -36,7 +46,7 @@ class ProductController extends Controller
         
         Product::create($validated);
         
-        return redirect()->route('products.index')->with('success', 'Product created successfully');
+        return redirect()->route('products.index');
     }
 
     public function show(Product $product)
@@ -66,12 +76,12 @@ class ProductController extends Controller
         
         $product->update($validated);
         
-        return redirect()->route('products.index')->with('success', 'Product updated successfully');
+        return redirect()->route('products.index');
     }
 
     public function destroy(Product $product)
     {
         $product->delete();
-        return redirect()->route('products.index')->with('success', 'Product deleted successfully');
+        return redirect()->route('products.index');
     }
 }

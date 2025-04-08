@@ -29,7 +29,7 @@ class OrderController extends Controller
         $cart = Cart::where('session_id', $sessionId)->first();
         
         if (!$cart || $cart->items->isEmpty()) {
-            return redirect()->route('cart.index')->with('error', 'Your cart is empty');
+            return redirect()->route('cart.index');
         }
 
         $total = $cart->items->sum(function ($item) {

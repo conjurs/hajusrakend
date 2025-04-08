@@ -6,10 +6,11 @@ use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
+use App\Traits\CartSession;
 
 class CartController extends Controller
 {
+    use CartSession;
 
     public function index()
     {
@@ -53,7 +54,7 @@ class CartController extends Controller
             $cartItem->save();
         }
         
-        return redirect()->route('cart.index')->with('success', 'Product added to cart');
+        return redirect()->route('cart.index');
     }
     
     public function updateQuantity(Request $request, $id)
@@ -74,8 +75,6 @@ class CartController extends Controller
         $itemTotal = $cartItem->product->price * $cartItem->quantity;
 
         return response()->json([
-            'success' => true,
-            'message' => 'Quantity updated successfully',
             'quantity' => $cartItem->quantity,
             'itemTotal' => number_format($itemTotal, 2),
             'cartTotal' => number_format($cartTotal, 2)
@@ -87,7 +86,7 @@ class CartController extends Controller
         $cartItem = CartItem::findOrFail($id);
         $cartItem->delete();
         
-        return redirect()->route('cart.index')->with('success', 'Item removed from cart');
+        return redirect()->route('cart.index');
     }
     
     public function store(Request $request, Product $product)
@@ -115,7 +114,7 @@ class CartController extends Controller
             $cartItem->save();
         }
         
-        return redirect()->route('cart.index')->with('success', 'Product added to cart');
+        return redirect()->route('cart.index');
     }
 
     private function getCartSessionId()
@@ -139,6 +138,6 @@ class CartController extends Controller
             CartItem::where('cart_id', $cart->id)->delete();
         }
         
-        return redirect()->route('cart.index')->with('success', 'Cart cleared');
+        return redirect()->route('cart.index');
     }
 }
