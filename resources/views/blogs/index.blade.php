@@ -195,7 +195,6 @@
                 <a href="{{ route('blogs.show', $post->id) }}" class="post-title">{{ $post->title }}</a>
                 <div class="post-meta">
                     <a href="#" class="post-author">{{ $post->user->name }}</a>
-                    <span>{{ $post->created_at->diffForHumans() }}</span>
                 </div>
             </div>
             <div class="post-stats">
