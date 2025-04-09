@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Cache;
 class WeatherController extends Controller
 {
     private $cacheTime = 600;
+    private $apiKey = '036869811325bcf912fdb2ad0b159b03';
 
     public function index()
     {
@@ -28,7 +29,7 @@ class WeatherController extends Controller
         try {
             $response = Http::get("http://api.openweathermap.org/data/2.5/weather", [
                 'q' => $city,
-                'appid' => env('OPENWEATHER_API_KEY'),
+                'appid' => $this->apiKey,
                 'units' => 'metric'
             ]);
 
