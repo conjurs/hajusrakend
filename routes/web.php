@@ -46,4 +46,6 @@ Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
 Route::get('/orders/success', [OrderController::class, 'success'])->name('orders.success');
 
 Route::get('/weather', [WeatherController::class, 'index'])->name('weather.index');
+Route::get('/current/public/index.php/weather', [WeatherController::class, 'index'])->name('weather.index');
 Route::get('/weather/get', [WeatherController::class, 'getWeather'])->name('weather.get');
+Route::get('/current/public/index.php/weather/get', [WeatherController::class, 'getWeather'])->name('weather.get');
