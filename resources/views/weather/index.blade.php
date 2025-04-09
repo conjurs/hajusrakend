@@ -13,11 +13,18 @@
     
     <div id="weatherResult" class="weather-result">
         <div class="weather-card">
-            <h2 id="cityName"></h2>
-            <p id="weatherDescription"></p>
+            <div class="weather-header">
+                <h2 id="cityName"></h2>
+                <img id="weatherIcon" class="weather-icon" src="" alt="Weather icon">
+            </div>
+            <p id="weatherDescription" class="weather-description"></p>
             <div class="weather-details">
-                <p>Temperature: <span id="temperature"></span>°C</p>
-                <p>Wind Speed: <span id="windSpeed"></span> m/s</p>
+                <div class="weather-detail">
+                    <span>Temperature: <span id="temperature"></span>°C</span>
+                </div>
+                <div class="weather-detail">
+                    <span>Wind Speed: <span id="windSpeed"></span> m/s</span>
+                </div>
             </div>
         </div>
     </div>
@@ -87,28 +94,51 @@
     border: 1px solid var(--border-color);
 }
 
-.weather-card h2 {
-    font-size: 1.5rem;
+.weather-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     margin-bottom: 1rem;
-    color: var(--text-color);
 }
 
-.weather-card p {
+.weather-header h2 {
+    font-size: 1.5rem;
+    color: var(--text-color);
+    margin: 0;
+}
+
+.weather-icon {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+}
+
+.weather-description {
+    text-transform: capitalize;
     color: #999;
-    margin-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+    font-size: 1.2rem;
 }
 
 .weather-details {
-    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
 
-.weather-details p {
+.weather-detail {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
     font-size: 1.1rem;
     color: var(--text-color);
 }
 
-.weather-details span {
+.weather-detail span {
     font-weight: 600;
+}
+
+.weather-detail span span {
     color: var(--primary-color);
 }
 </style>
@@ -137,6 +167,7 @@ function getWeather() {
             document.getElementById('weatherDescription').textContent = data.description;
             document.getElementById('temperature').textContent = data.temperature;
             document.getElementById('windSpeed').textContent = data.windSpeed;
+            document.getElementById('weatherIcon').src = `https://openweathermap.org/img/wn/${data.icon}@2x.png`;
         })
         .catch(error => {
             console.error('Error:', error);

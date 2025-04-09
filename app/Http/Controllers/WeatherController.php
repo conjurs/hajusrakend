@@ -39,7 +39,8 @@ class WeatherController extends Controller
                     'city' => $data['name'],
                     'description' => $data['weather'][0]['description'],
                     'temperature' => $data['main']['temp'],
-                    'windSpeed' => $data['wind']['speed']
+                    'windSpeed' => $data['wind']['speed'],
+                    'icon' => $data['weather'][0]['icon']
                 ];
 
                 Cache::put($cacheKey, $weatherData, $this->cacheTime);
