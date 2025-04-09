@@ -45,5 +45,5 @@ Route::delete('/cart/{id}', [CartController::class, 'destroy'])->name('cart.dest
 Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
 Route::get('/orders/success', [OrderController::class, 'success'])->name('orders.success');
 
-Route::get('/{path?}/weather', [WeatherController::class, 'index'])->where('path', 'current/public/index.php')->name('weather.index');
-Route::get('/{path?}/weather/get', [WeatherController::class, 'getWeather'])->where('path', 'current/public/index.php')->name('weather.get');
+Route::get('/weather', [WeatherController::class, 'index'])->name('weather.index');
+Route::get('/weather/get', [WeatherController::class, 'getWeather'])->name('weather.get');
