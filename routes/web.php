@@ -38,14 +38,12 @@ Route::middleware(['web', 'auth', 'admin'])->group(function () {
 Route::resource('products', ProductController::class);
 
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-Route::post('/cart/update/{id}', [CartController::class, 'updateQuantity'])->name('cart.update');
+Route::post('/cart/update', [CartController::class, 'updateQuantity'])->name('cart.update');
 Route::post('/cart/add/{product}', [CartController::class, 'store'])->name('cart.store');
 Route::delete('/cart/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
 
 Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
 Route::get('/orders/success', [OrderController::class, 'success'])->name('orders.success');
 
-Route::get('/weather', [WeatherController::class, 'index'])->name('weather.index');
-Route::get('/current/public/index.php/weather', [WeatherController::class, 'index'])->name('weather.index');
-Route::get('/weather/get', [WeatherController::class, 'getWeather'])->name('weather.get');
-Route::get('/current/public/index.php/weather/get', [WeatherController::class, 'getWeather'])->name('weather.get');
+Route::get('/{path?}/weather', [WeatherController::class, 'index'])->where('path', 'current/public/index.php')->name('weather.index');
+Route::get('/{path?}/weather/get', [WeatherController::class, 'getWeather'])->where('path', 'current/public/index.php')->name('weather.get');

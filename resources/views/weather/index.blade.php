@@ -124,11 +124,7 @@ function getWeather() {
     const city = document.getElementById('cityInput').value;
     if (!city) return;
 
-    const baseUrl = window.location.pathname.includes('/current/public/index.php') 
-        ? '/current/public/index.php/weather/get' 
-        : '/weather/get';
-
-    fetch(`${baseUrl}?city=${encodeURIComponent(city)}`)
+    fetch('{{ route('weather.get') }}?city=${encodeURIComponent(city)}')
         .then(response => response.json())
         .then(data => {
             if (data.error) {
