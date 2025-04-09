@@ -29,7 +29,7 @@
                                 <button type="button" class="btn-quantity" onclick="decrementQuantity(this)">
                                     <i class="bi bi-dash"></i>
                                 </button>
-                                <input type="number" value="1" min="1" max="10" class="quantity-input" data-product-id="{{ $product->id }}" data-max-quantity="{{ 10 - ($cartQuantities[$product->id] ?? 0) }}">
+                                <input type="number" value="1" min="1" max="{{ max(0, 10 - ($cartQuantities[$product->id] ?? 0)) }}" class="quantity-input" data-product-id="{{ $product->id }}" data-max-quantity="{{ max(0, 10 - ($cartQuantities[$product->id] ?? 0)) }}">
                                 <button type="button" class="btn-quantity" onclick="incrementQuantity(this)">
                                     <i class="bi bi-plus"></i>
                                 </button>
@@ -53,6 +53,27 @@
 <style>
 .shop-container {
     padding: 2rem 0;
+    max-height: calc(100vh - var(--header-height) - 4rem);
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.shop-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.shop-container::-webkit-scrollbar-track {
+    background: var(--secondary-bg);
+    border-radius: 4px;
+}
+
+.shop-container::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 4px;
+}
+
+.shop-container::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-hover);
 }
 
 .shop-title {

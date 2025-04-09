@@ -146,16 +146,7 @@
         }
         
         .nav-link:hover::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 15px;
-            height: 3px;
-            background-color: var(--primary-color);
-            border-radius: 10px;
-            opacity: 0.5;
+            content: none;
         }
         
         .nav-item {
@@ -319,6 +310,22 @@
                 padding: 0;
             }
         }
+
+        .nav-link.dropdown-toggle::after {
+            content: none;
+        }
+
+        .nav-link.dropdown-toggle:hover::after {
+            display: inline-block;
+            opacity: 1;
+            border-top: 0.3em solid;
+            border-right: 0.3em solid transparent;
+            border-left: 0.3em solid transparent;
+        }
+
+        .nav-link:hover::after {
+            content: none;
+        }
     </style>
     @yield('styles')
 </head>
@@ -386,20 +393,6 @@
     </nav>
 
     <div class="container my-4">
-        @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show">
-                {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        @endif
-
-        @if(session('error'))
-            <div class="alert alert-danger alert-dismissible fade show">
-                {{ session('error') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        @endif
-
         @yield('content')
     </div>
 

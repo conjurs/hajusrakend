@@ -3,7 +3,7 @@
 @section('title', 'Shopping Cart')
 
 @section('content')
-<div class="container py-5" style="background: #111111; min-height: 100vh;">
+<div class="cart-container">
     <div class="row justify-content-center">
         <div class="col-lg-8">
             <div class="d-flex justify-content-between align-items-center mb-4">
@@ -146,7 +146,6 @@
             @else
                 <div class="text-center py-5">
                     <h4 class="mb-3 text-white">Your cart is empty</h4>
-                    <p class="text-muted mb-4">Looks like you haven't added anything to your cart yet.</p>
                     <a href="{{ route('products.index') }}" class="btn" style="background: #0066FF; color: white;">Start Shopping</a>
                 </div>
             @endif
@@ -227,6 +226,21 @@ function showCart() {
 </script>
 
 <style>
+.cart-container {
+    padding: 2rem 0;
+    max-height: calc(100vh - 100px);
+    overflow-y: scroll;
+    overflow-x: hidden;
+    background: #111111;
+    min-height: 100vh;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.cart-container::-webkit-scrollbar {
+    display: none;
+}
+
 .quantity-control {
     background: rgba(255,255,255,0.1);
     border-radius: 6px;

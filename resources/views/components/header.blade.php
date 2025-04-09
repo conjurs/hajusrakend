@@ -109,8 +109,7 @@
     }
 
     .user-trigger:hover {
-        color: #4c175a;
-        text-shadow: 0 0 4px rgba(76, 23, 90, 0.4);
+        /* Remove hover effect */
     }
 
     .user-dropdown {

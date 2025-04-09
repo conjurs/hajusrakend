@@ -11,5 +11,10 @@ class Marker extends Model
     
     protected $fillable = ['name', 'latitude', 'longitude', 'description'];
     
-    protected $dates = ['added', 'edited'];
+    protected $casts = [
+        'added' => 'datetime',
+        'edited' => 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime'
+    ];
 }

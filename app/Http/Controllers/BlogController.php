@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Blog;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,8 +17,17 @@ class BlogController extends Controller
 
     public function index()
     {
-        $blogs = Blog::with('user')->latest()->paginate(10);
-        return view('blogs.index', compact('blogs'));
+        $posts = Blog::with('user')
+            ->withCount('comments')
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+
+        // Get statistics
+        $totalPosts = Blog::count();
+        $totalUsers = User::count();
+        $latestUser = User::latest()->first()->name ?? 'No members yet';
+
+        return view('blogs.index', compact('posts', 'totalPosts', 'totalUsers', 'latestUser'));
     }
 
     public function create()

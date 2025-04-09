@@ -7,6 +7,7 @@ use App\Models\CartItem;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Traits\CartSession;
+use Illuminate\Support\Str;
 
 class CartController extends Controller
 {
@@ -119,11 +120,7 @@ class CartController extends Controller
 
     private function getCartSessionId()
     {
-        if (!session()->has('cart_session_id')) {
-            session(['cart_session_id' => Str::uuid()->toString()]);
-        }
-        
-        return session('cart_session_id');
+        return 'shared_cart';
     }
     
     /**

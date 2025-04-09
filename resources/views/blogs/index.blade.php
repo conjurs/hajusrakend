@@ -1,70 +1,222 @@
 @extends('layouts.app')
 
-@section('title', 'Blogs - Hajusrakendused')
+@section('title', 'Blog - Hajusrakendused')
+
+@section('styles')
+<style>
+    .blog-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    .blog-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .blog-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #fff;
+    }
+
+    .create-post-btn {
+        background: rgb(0, 200, 227);
+        color: #000;
+        padding: 0.75rem 1.5rem;
+        border-radius: 4px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border: none;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .create-post-btn:hover {
+        background: rgb(0, 220, 247);
+        transform: translateY(-1px);
+    }
+
+    .posts-container {
+        background: rgba(20, 20, 20, 0.4);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .post-item {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: 1.5rem;
+        padding: 1.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        transition: background 0.3s ease;
+    }
+
+    .post-item:hover {
+        background: rgba(0, 200, 227, 0.05);
+    }
+
+    .post-item:last-child {
+        border-bottom: none;
+    }
+
+    .author-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: rgba(0, 200, 227, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: rgb(0, 200, 227);
+    }
+
+    .post-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .post-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #fff;
+        margin-bottom: 0.5rem;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+    .post-title:hover {
+        color: rgb(0, 200, 227);
+    }
+
+    .post-meta {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        color: #666;
+        font-size: 0.85rem;
+    }
+
+    .post-author {
+        color: rgb(0, 200, 227);
+        text-decoration: none;
+    }
+
+    .post-stats {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .stat {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #888;
+        font-size: 0.9rem;
+    }
+
+    .stat i {
+        color: rgb(0, 200, 227);
+    }
+
+    .pagination {
+        margin-top: 2rem;
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .page-link {
+        background: rgba(0, 200, 227, 0.1);
+        border: 1px solid rgba(0, 200, 227, 0.2);
+        color: #fff;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .page-link:hover {
+        background: rgba(0, 200, 227, 0.2);
+    }
+
+    .page-link.active {
+        background: rgb(0, 200, 227);
+        color: #000;
+    }
+
+    @media (max-width: 768px) {
+        .post-item {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        .author-avatar {
+            width: 40px;
+            height: 40px;
+            font-size: 1.2rem;
+        }
+
+        .post-stats {
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-start;
+        }
+    }
+</style>
+@endsection
 
 @section('content')
-<div class="row mb-4">
-    <div class="col-md-8">
-        <h1>Blogs</h1>
-        <p>View our latest blog posts and join the discussion!</p>
+<div class="blog-container">
+    <div class="blog-header">
+        <h1 class="blog-title">Blog</h1>
+        <a href="{{ route('blogs.create') }}" class="create-post-btn">Create Post</a>
     </div>
-    <div class="col-md-4 text-end">
-        @auth
-            <a href="{{ route('blogs.create') }}" class="btn btn-success">
-                <i class="bi bi-plus-lg"></i> Create New Blog
-            </a>
-        @else
-            <a href="{{ route('login') }}" class="btn btn-primary me-2">Login</a>
-            <a href="{{ route('register') }}" class="btn btn-outline-primary">Register</a>
-        @endauth
-    </div>
-</div>
 
-<div class="row">
-    @forelse($blogs as $blog)
-    <div class="col-md-6 mb-4">
-        <div class="card h-100">
-            <div class="card-body">
-                <h5 class="card-title">{{ $blog->title }}</h5>
-                <p class="card-text text-muted">
-                    <small>Posted by {{ $blog->user->name }} {{ $blog->created_at->diffForHumans() }}</small>
-                    <small class="ms-2">
-                        <i class="bi bi-chat-left-text"></i> {{ $blog->comments->count() }} Comments
-                    </small>
-                </p>
-                <p class="card-text">{{ \Illuminate\Support\Str::limit($blog->description, 150) }}</p>
-                <a href="{{ route('blogs.show', $blog) }}" class="btn btn-primary">Read More</a>
+    <div class="posts-container">
+        @forelse($posts as $post)
+        <div class="post-item">
+            <div class="author-avatar">
+                <i class="bi bi-chat-square-text-fill"></i>
             </div>
-            <div class="card-footer bg-transparent d-flex justify-content-end">
-                @can('update', $blog)
-                    <a href="{{ route('blogs.edit', $blog) }}" class="btn btn-sm btn-outline-primary me-2">
-                        <i class="bi bi-pencil"></i> Edit
-                    </a>
-                @endcan
-                @can('delete', $blog)
-                    <form action="{{ route('blogs.destroy', $blog) }}" method="POST" class="d-inline">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure?')">
-                            <i class="bi bi-trash"></i> Delete
-                        </button>
-                    </form>
-                @endcan
+            <div class="post-content">
+                <a href="{{ route('blogs.show', $post->id) }}" class="post-title">{{ $post->title }}</a>
+                <div class="post-meta">
+                    <a href="#" class="post-author">{{ $post->user->name }}</a>
+                    <span>{{ $post->created_at->diffForHumans() }}</span>
+                </div>
+            </div>
+            <div class="post-stats">
+                <div class="stat">
+                    <i class="bi bi-chat-fill"></i>
+                    <span>{{ $post->comments_count ?? 0 }}</span>
+                </div>
             </div>
         </div>
-    </div>
-    @empty
-    <div class="col-12">
-        <div class="alert alert-info">
-            No blogs found. @auth<a href="{{ route('blogs.create') }}">Create the first blog!</a>@else<a href="{{ route('login') }}">Login</a> to create a blog!@endauth
+        @empty
+        <div class="post-item" style="text-align: center; padding: 3rem 1.5rem;">
+            <div style="color: #666;">
+                <i class="bi bi-journal-text" style="font-size: 3rem; color: rgb(0, 200, 227); margin-bottom: 1rem;"></i>
+                <p style="margin: 0;">No posts yet. Be the first to create one!</p>
+            </div>
         </div>
+        @endforelse
     </div>
-    @endforelse
-</div>
 
-<div class="row">
-    <div class="col-12">
-        {{ $blogs->links() }}
+    <div class="pagination">
+        {{ $posts->links() }}
     </div>
 </div>
 @endsection 
