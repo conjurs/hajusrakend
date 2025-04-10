@@ -355,6 +355,16 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link {{ Request::is('monsters*') ? 'active' : '' }}" href="{{ route('monsters.index') }}">
+                            Monsters API
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ Request::is('api-viewer*') ? 'active' : '' }}" href="{{ route('api-viewer.index') }}">
+                            API View
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link {{ Request::is('products*') ? 'active' : '' }}" href="{{ route('products.index') }}">
                             Shop
                         </a>

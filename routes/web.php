@@ -10,6 +10,8 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\WeatherController;
+use App\Http\Controllers\MonsterPageController;
+use App\Http\Controllers\ApiViewerController;
 
 Route::get('/', function () {
     return view('home');
@@ -47,3 +49,15 @@ Route::get('/orders/success', [OrderController::class, 'success'])->name('orders
 
 Route::get('/weather', [WeatherController::class, 'index'])->name('weather.index');
 Route::get('/weather/get', [WeatherController::class, 'getWeather'])->name('weather.get');
+
+Route::get('/monsters', [MonsterPageController::class, 'index'])->name('monsters.index');
+Route::post('/monsters', [MonsterPageController::class, 'store'])->name('monsters.store');
+Route::delete('/monsters/{monster}', [MonsterPageController::class, 'destroy'])
+    ->middleware(['auth', 'admin'])
+    ->name('monsters.destroy');
+
+Route::get('/api-viewer', [ApiViewerController::class, 'index'])->name('api-viewer.index');
+
+Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
+});
+    
