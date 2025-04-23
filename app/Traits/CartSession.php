@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 trait CartSession
 {
@@ -11,7 +12,8 @@ trait CartSession
         $sessionId = session('cart_session_id');
         
         if (!$sessionId) {
-            $sessionId = Str::random(40);
+            $userId = Auth::id() ? Auth::id() : 'guest';
+            $sessionId = $userId . '_' . Str::random(40);
             session(['cart_session_id' => $sessionId]);
         }
         

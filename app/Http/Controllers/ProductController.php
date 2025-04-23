@@ -11,6 +11,11 @@ class ProductController extends Controller
 {
     use CartSession;
 
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index()
     {
         $products = Product::all();

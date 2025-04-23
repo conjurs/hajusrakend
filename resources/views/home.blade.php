@@ -225,7 +225,7 @@
             <span class="feature-title">API</span>
         </a>
         
-        <a href="{{ url('api/monsters') }}" class="feature-btn api-viewer">
+        <a href="{{ url('api-viewer') }}" class="feature-btn api-viewer">
             <i class="bi bi-eye-fill feature-icon"></i>
             <span class="feature-title">API Viewer</span>
         </a>

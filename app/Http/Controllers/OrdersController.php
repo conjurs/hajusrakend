@@ -58,7 +58,6 @@ class OrdersController extends Controller
                 'created_at' => now()
             ]);
 
-            // Only clear the cart after successful order processing
             $cart->items()->delete();
             $cart->delete();
             session()->forget('cart_session_id');

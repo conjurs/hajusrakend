@@ -12,16 +12,13 @@ class JsonPrettyPrint
     {
         $response = $next($request);
         
-        // Check if the response is JSON
         if (strpos($response->headers->get('Content-Type', ''), 'application/json') !== false || $request->is('api/*')) {
             $content = $response->getContent();
             $json = json_decode($content);
             
             if (json_last_error() === JSON_ERROR_NONE) {
-                // Set proper JSON headers
                 $response->headers->set('Content-Type', 'application/json');
-                
-                // Format JSON with proper indentation and spacing
+
                 $response->setContent(json_encode($json, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_LINE_TERMINATORS));
             }
         }

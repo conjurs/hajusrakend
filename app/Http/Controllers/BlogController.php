@@ -22,7 +22,6 @@ class BlogController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
-        // Get statistics
         $totalPosts = Blog::count();
         $totalUsers = User::count();
         $latestUser = User::latest()->first()->name ?? 'No members yet';

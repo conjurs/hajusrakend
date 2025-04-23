@@ -27,7 +27,6 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        // Check if user exists and is banned
         $user = User::where('email', $credentials['email'])->first();
         if ($user && $user->isBanned()) {
             throw ValidationException::withMessages([

@@ -5,10 +5,16 @@ namespace App\Http\Controllers;
 use App\Models\Cart;
 use App\Traits\CartSession;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CheckoutController extends Controller
 {
     use CartSession;
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
     public function index()
     {

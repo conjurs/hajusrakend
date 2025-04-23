@@ -39,19 +39,39 @@ Route::middleware(['web', 'auth', 'admin'])->group(function () {
     Route::delete('/admin/users/{user}', [AdminController::class, 'deleteUser'])->name('admin.users.delete');
 });
 
-Route::resource('products', ProductController::class);
+Route::middleware(['auth'])->group(function () {
+    Route::resource('products', ProductController::class);
+    
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/cart/update/{id}', [CartController::class, 'updateQuantity'])->name('cart.update');
+    Route::post('/cart/add/{product}', [CartController::class, 'store'])->name('cart.store');
+    Route::delete('/cart/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
+    
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+    Route::post('/payment/create-intent', [PaymentController::class, 'createPaymentIntent'])->name('payment.create-intent');
+    Route::post('/payment/success', [PaymentController::class, 'handlePaymentSuccess'])->name('payment.success');
+    Route::post('/payment/process', [PaymentController::class, 'processPayment'])->name('payment.process');
+    
+    Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
+    Route::get('/orders/success', [OrderController::class, 'success'])->name('orders.success');
+    Route::get('/orders/error', [OrderController::class, 'error'])->name('orders.error');
+});
 
-Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-Route::post('/cart/update/{id}', [CartController::class, 'updateQuantity'])->name('cart.update');
-Route::post('/cart/add/{product}', [CartController::class, 'store'])->name('cart.store');
-Route::delete('/cart/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
-
-Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
-Route::post('/payment/create-intent', [PaymentController::class, 'createPaymentIntent'])->name('payment.create-intent');
-Route::post('/payment/process', [PaymentController::class, 'processPayment'])->name('payment.process');
-
-Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
-Route::get('/orders/success', [OrderController::class, 'success'])->name('orders.success');
+Route::middleware(['auth'])->get('/test/success', function() {
+    $order = (object)[
+        'id' => rand(1000, 9999),
+        'email' => 'test@example.com',
+        'first_name' => 'Test',
+        'last_name' => 'User',
+        'phone' => '1234567890',
+        'payment_method' => 'card',
+        'total_amount' => 99.99,
+        'created_at' => now()
+    ];
+    
+    session()->flash('order', $order);
+    return redirect()->route('orders.success');
+})->name('test.success');
 
 Route::get('/weather', [WeatherController::class, 'index'])->name('weather.index');
 Route::get('/weather/get', [WeatherController::class, 'getWeather'])->name('weather.get');

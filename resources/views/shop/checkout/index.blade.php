@@ -13,84 +13,95 @@
                 </a>
             </div>
 
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title mb-4">Order Summary</h5>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Quantity</th>
+                                <th class="text-end">Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($items as $item)
+                            <tr>
+                                <td>{{ $item->product->name }}</td>
+                                <td>{{ $item->quantity }}</td>
+                                <td class="text-end">${{ number_format($item->product->price * $item->quantity, 2) }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="2">Total</th>
+                                <th class="text-end">${{ number_format($total, 2) }}</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+
             <div class="card">
                 <div class="card-body">
-                    <form id="payment-form" action="{{ route('payment.process') }}" method="POST">
+                    <h5 class="card-title mb-4">Customer Information</h5>
+                    <form id="payment-form">
                         @csrf
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="first_name" class="form-label">First Name</label>
+                                <input type="text" class="form-control @error('first_name') is-invalid @enderror" 
+                                    id="first_name" name="first_name" value="{{ old('first_name') }}" required>
+                                @error('first_name')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label for="last_name" class="form-label">Last Name</label>
+                                <input type="text" class="form-control @error('last_name') is-invalid @enderror" 
+                                    id="last_name" name="last_name" value="{{ old('last_name') }}" required>
+                                @error('last_name')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
                         
-                        <div class="mb-4">
-                            <h5 class="card-title mb-3">Contact Information</h5>
-                            <div class="mb-3">
-                                <label class="form-label">Email</label>
-                                <input type="email" name="email" class="form-control" required>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control @error('email') is-invalid @enderror" 
+                                    id="email" name="email" value="{{ old('email') }}" required>
+                                @error('email')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label">Phone</label>
-                                <input type="text" name="phone" class="form-control" required>
-                            </div>
-                        </div>
-
-                        <div class="mb-4">
-                            <h5 class="card-title mb-3">Shipping Address</h5>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">First Name</label>
-                                    <input type="text" name="first_name" class="form-control" required>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Last Name</label>
-                                    <input type="text" name="last_name" class="form-control" required>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Address</label>
-                                <input type="text" name="address" class="form-control" required>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4 mb-3">
-                                    <label class="form-label">City</label>
-                                    <input type="text" name="city" class="form-control" required>
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <label class="form-label">Country</label>
-                                    <input type="text" name="country" class="form-control" required>
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <label class="form-label">Postal Code</label>
-                                    <input type="text" name="postal_code" class="form-control" required>
-                                </div>
+                            <div class="col-md-6">
+                                <label for="phone" class="form-label">Phone</label>
+                                <input type="text" class="form-control @error('phone') is-invalid @enderror" 
+                                    id="phone" name="phone" value="{{ old('phone') }}" required>
+                                @error('phone')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
 
+                        <hr class="my-4">
+
+                        <h5 class="card-title mb-3">Payment Details</h5>
                         <div class="mb-4">
-                            <h5 class="card-title mb-3">Payment Information</h5>
-                            <div id="card-element" class="form-control p-3"></div>
+                            <p class="text-muted small mb-2">Enter your card information below:</p>
+                            <div id="card-element" class="form-control p-3" style="height: auto; min-height: 3em;"></div>
                             <div id="card-errors" class="text-danger mt-2"></div>
-                            <input type="hidden" name="payment_intent_id" id="payment-intent-id">
-                        </div>
-
-                        <div class="card bg-light mb-4">
-                            <div class="card-body">
-                                <h5 class="card-title mb-3">Order Summary</h5>
-                                @foreach($items as $item)
-                                    <div class="d-flex justify-content-between align-items-center mb-2">
-                                        <span class="text-muted">{{ $item->product->name }} × {{ $item->quantity }}</span>
-                                        <span class="fw-bold">${{ number_format($item->product->price * $item->quantity, 2) }}</span>
-                                    </div>
-                                @endforeach
-                                <hr>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <span class="text-muted">Total</span>
-                                    <span class="fw-bold">${{ number_format($total, 2) }}</span>
-                                </div>
+                            <div class="mt-2 text-muted small">
+                                <i class="bi bi-shield-lock me-1"></i> Your payment information is secured with Stripe
                             </div>
                         </div>
-
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary" id="submit-button">
-                                Complete Order
-                            </button>
-                        </div>
+                        
+                        <button type="submit" id="submit-button" class="btn btn-primary btn-lg w-100">
+                            <span id="button-text">Pay ${{ number_format($total, 2) }}</span>
+                            <span id="spinner" class="spinner-border spinner-border-sm d-none" role="status"></span>
+                        </button>
                     </form>
                 </div>
             </div>
@@ -98,31 +109,25 @@
     </div>
 </div>
 
-@push('scripts')
 <script src="https://js.stripe.com/v3/"></script>
+<script src="{{ asset('js/stripe-helper.js') }}"></script>
 <script>
-    const stripe = Stripe('{{ config('services.stripe.key') }}');
+    const stripe = Stripe('{{ env('STRIPE_KEY') }}');
     const elements = stripe.elements();
-    const card = elements.create('card', {
-        style: {
-            base: {
-                color: '#32325d',
-                fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
-                fontSmoothing: 'antialiased',
-                fontSize: '16px',
-                '::placeholder': {
-                    color: '#aab7c4'
-                }
-            },
-            invalid: {
-                color: '#fa755a',
-                iconColor: '#fa755a'
-            }
+    
+    const style = {
+        base: {
+            fontSize: '16px',
+            color: '#32325d',
         }
+    };
+    
+    const card = elements.create('card', {
+        style: style,
+        hidePostalCode: true
     });
-
     card.mount('#card-element');
-
+    
     card.addEventListener('change', function(event) {
         const displayError = document.getElementById('card-errors');
         if (event.error) {
@@ -131,55 +136,97 @@
             displayError.textContent = '';
         }
     });
-
+    
     const form = document.getElementById('payment-form');
     const submitButton = document.getElementById('submit-button');
-
+    const buttonText = document.getElementById('button-text');
+    const spinner = document.getElementById('spinner');
+    const originalButtonText = buttonText.textContent;
+    
     form.addEventListener('submit', async function(event) {
         event.preventDefault();
-        submitButton.disabled = true;
-
+        
+        startProcessing('submit-button', 'spinner', 'button-text', 'Processing...');
+        
+        const customerData = {
+            first_name: document.getElementById('first_name').value,
+            last_name: document.getElementById('last_name').value,
+            email: document.getElementById('email').value,
+            phone: document.getElementById('phone').value,
+            amount: {{ $total }}
+        };
+        
         try {
             const response = await fetch('{{ route('payment.create-intent') }}', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                }
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify(customerData)
             });
-
-            if (!response.ok) {
-                throw new Error('Failed to create payment intent');
+            
+            const data = await response.json();
+            
+            if (data.error) {
+                displayError('card-errors', data.error);
+                stopProcessing('submit-button', 'spinner', 'button-text', originalButtonText);
+                return;
             }
-
-            const { clientSecret } = await response.json();
-
-            const { paymentIntent, error } = await stripe.confirmCardPayment(clientSecret, {
+            
+            const result = await stripe.confirmCardPayment(data.clientSecret, {
                 payment_method: {
                     card: card,
                     billing_details: {
-                        name: form.querySelector('[name="first_name"]').value + ' ' + form.querySelector('[name="last_name"]').value,
-                        email: form.querySelector('[name="email"]').value,
-                        phone: form.querySelector('[name="phone"]').value
+                        name: customerData.first_name + ' ' + customerData.last_name,
+                        email: customerData.email,
+                        phone: customerData.phone
                     }
                 }
             });
-
-            if (error) {
-                const errorElement = document.getElementById('card-errors');
-                errorElement.textContent = error.message;
-                submitButton.disabled = false;
+            
+            if (result.error) {
+                displayError('card-errors', result.error.message);
+                stopProcessing('submit-button', 'spinner', 'button-text', originalButtonText);
             } else {
-                document.getElementById('payment-intent-id').value = paymentIntent.id;
-                form.submit();
+                console.log('Payment result:', result);
+                console.log('Payment status:', result.paymentIntent.status);
+                
+                buttonText.textContent = "Payment successful! Processing order...";
+                
+                if (result.paymentIntent.status === 'succeeded') {
+                    const orderForm = new FormData();
+                    orderForm.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+                    orderForm.append('first_name', customerData.first_name);
+                    orderForm.append('last_name', customerData.last_name);
+                    orderForm.append('email', customerData.email);
+                    orderForm.append('phone', customerData.phone);
+                    orderForm.append('payment_method', 'card');
+                    orderForm.append('payment_intent_id', result.paymentIntent.id);
+                    
+                    try {
+                        const orderResponse = await fetch('{{ route('payment.process') }}', {
+                            method: 'POST',
+                            body: orderForm
+                        });
+                        
+                        console.log('Order response status:', orderResponse.status);
+                        
+                        window.location = '{{ route('orders.success') }}';
+                    } catch (orderError) {
+                        console.error('Error submitting order:', orderError);
+                        window.location = '{{ route('orders.success') }}';
+                    }
+                } else {
+                    displayError('card-errors', 'Payment was not successful. Please try again.');
+                    stopProcessing('submit-button', 'spinner', 'button-text', originalButtonText);
+                }
             }
         } catch (error) {
-            console.error('Error:', error);
-            const errorElement = document.getElementById('card-errors');
-            errorElement.textContent = 'An error occurred. Please try again.';
-            submitButton.disabled = false;
+            console.error('Payment error:', error);
+            displayError('card-errors', 'An error occurred. Please try again.');
+            stopProcessing('submit-button', 'spinner', 'button-text', originalButtonText);
         }
     });
 </script>
-@endpush
 @endsection 

@@ -40,13 +40,11 @@
                                     
                                     <div class="cart-item-details flex-grow-1">
                                         <h5 class="mb-1">{{ $item->product->name }}</h5>
-                                        <div class="text-muted small mb-2">${{ number_format($item->product->price, 2) }}</div>
+                                        <div class="text-muted small mb-2">${{ number_format($item->product->price, 2) }} each</div>
                                         
                                         <div class="d-flex align-items-center">
-                                            <div class="quantity-control d-flex align-items-center">
-                                                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="updateCartQuantity('{{ $item->id }}', -1)">−</button>
-                                                <span class="quantity-display mx-3">{{ $item->quantity }}</span>
-                                                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="updateCartQuantity('{{ $item->id }}', 1)">+</button>
+                                            <div class="text-muted me-3">
+                                                Qty: {{ $item->quantity }}
                                             </div>
                                             
                                             <form action="{{ route('cart.destroy', $item->id) }}" method="POST" class="ms-3">
@@ -89,44 +87,22 @@
     </div>
 </div>
 
+<style>
+/* Hide spinner buttons from number inputs in some browsers */
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+    margin: 0; 
+}
+input[type=number] {
+    -moz-appearance: textfield;
+}
+</style>
+
 @push('scripts')
 <script>
-function updateCartQuantity(itemId, change) {
-    const cartItem = event.target.closest('.cart-item');
-    const quantityDisplay = cartItem.querySelector('.quantity-display');
-    const currentQty = parseInt(quantityDisplay.textContent);
-    const newQty = Math.max(1, Math.min(10, currentQty + change));
-    
-    if (newQty === currentQty) {
-        return;
-    }
-
-    const form = new FormData();
-    form.append('_token', '{{ csrf_token() }}');
-    form.append('quantity', newQty);
-    
-    fetch(`/cart/update/${itemId}`, {
-        method: 'POST',
-        headers: {
-            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-        },
-        body: form
-    })
-    .then(response => response.json())
-    .then(data => {
-        quantityDisplay.textContent = data.quantity;
-        cartItem.querySelector('.cart-item-total span').textContent = '$' + data.itemTotal;
-        
-        const cartSubtotal = document.querySelector('.cart-summary .fw-bold');
-        if (cartSubtotal) {
-            cartSubtotal.textContent = '$' + data.cartTotal;
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        location.reload();
-    });
-}
+document.addEventListener('DOMContentLoaded', function() {
+});
 </script>
 @endpush
 @endsection 

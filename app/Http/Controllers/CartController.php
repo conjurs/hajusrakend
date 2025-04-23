@@ -8,20 +8,31 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Traits\CartSession;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
     use CartSession;
 
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index()
     {
         $sessionId = $this->getCartSessionId();
-        $cart = Cart::firstOrCreate(['session_id' => $sessionId]);
-        $items = $cart->items;
+        $cart = Cart::where('session_id', $sessionId)->first();
         
-        $total = $items->sum(function ($item) {
-            return $item->product->price * $item->quantity;
-        });
+        $items = [];
+        $total = 0;
+        
+        if ($cart) {
+            $items = $cart->items;
+            $total = $items->sum(function ($item) {
+                return $item->product->price * $item->quantity;
+            });
+        }
         
         return view('shop.cart.index', compact('items', 'total'));
     }
@@ -58,60 +69,85 @@ class CartController extends Controller
     
     public function updateQuantity(Request $request, $id)
     {
-        $validated = $request->validate([
-            'quantity' => 'required|integer|min:1|max:10',
+        $request->validate([
+            'quantity' => 'required|integer|min:1|max:10'
         ]);
         
-        $cartItem = CartItem::findOrFail($id);
-        $cartItem->quantity = $validated['quantity'];
+        $sessionId = $this->getCartSessionId();
+        $cart = Cart::where('session_id', $sessionId)->first();
+        
+        if (!$cart) {
+            return response()->json(['error' => 'Cart not found'], 404);
+        }
+        
+        $cartItem = CartItem::where('id', $id)->where('cart_id', $cart->id)->first();
+        
+        if (!$cartItem) {
+            return response()->json(['error' => 'Item not found'], 404);
+        }
+        
+        $cartItem->quantity = $request->quantity;
         $cartItem->save();
         
-        $total = $cartItem->product->price * $cartItem->quantity;
-        $cartTotal = $cartItem->cart->items->sum(function ($item) {
+        $items = $cart->items;
+        $cartTotal = $items->sum(function ($item) {
             return $item->product->price * $item->quantity;
         });
         
+        $itemTotal = number_format($cartItem->product->price * $cartItem->quantity, 2);
+        $cartTotal = number_format($cartTotal, 2);
+        
         return response()->json([
             'quantity' => $cartItem->quantity,
-            'itemTotal' => number_format($total, 2),
-            'cartTotal' => number_format($cartTotal, 2),
+            'itemTotal' => $itemTotal,
+            'cartTotal' => $cartTotal
         ]);
     }
     
     public function destroy($id)
     {
-        $cartItem = CartItem::findOrFail($id);
-        $cartItem->delete();
+        $sessionId = $this->getCartSessionId();
+        $cart = Cart::where('session_id', $sessionId)->first();
         
-        return redirect()->route('cart.index');
+        if (!$cart) {
+            return redirect()->route('cart.index');
+        }
+        
+        CartItem::where('id', $id)->where('cart_id', $cart->id)->delete();
+        
+        return redirect()->route('cart.index')->with('success', 'Item removed from cart!');
     }
     
     public function store(Request $request, Product $product)
     {
-        $validated = $request->validate([
-            'quantity' => 'required|integer|min:1|max:10',
+        $request->validate([
+            'quantity' => 'nullable|integer|min:1|max:10'
         ]);
         
+        $quantity = $request->input('quantity', 1);
         $sessionId = $this->getCartSessionId();
-        $cart = Cart::firstOrCreate(['session_id' => $sessionId]);
+        
+        $cart = Cart::firstOrCreate(
+            ['session_id' => $sessionId],
+            ['user_id' => Auth::id()]
+        );
         
         $cartItem = CartItem::where('cart_id', $cart->id)
             ->where('product_id', $product->id)
             ->first();
             
         if ($cartItem) {
-            $cartItem->quantity += $validated['quantity'];
+            $cartItem->quantity += $quantity;
             $cartItem->save();
         } else {
-            $cartItem = new CartItem([
+            CartItem::create([
                 'cart_id' => $cart->id,
                 'product_id' => $product->id,
-                'quantity' => $validated['quantity'],
+                'quantity' => $quantity
             ]);
-            $cartItem->save();
         }
         
-        return redirect()->route('cart.index')->with('success', 'Item added to cart');
+        return redirect()->route('cart.index')->with('success', 'Product added to cart!');
     }
     
     /**
