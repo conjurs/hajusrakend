@@ -220,12 +220,12 @@
             <span class="feature-title">Shop</span>
         </a>
 
-        <a href="/monsters" class="feature-btn api">
+        <a href="{{ route('monsters.index') }}" class="feature-btn api">
             <i class="bi bi-code-slash feature-icon"></i>
             <span class="feature-title">API</span>
         </a>
         
-        <a href="/api-viewer" class="feature-btn api-viewer">
+        <a href="{{ url('api/monsters') }}" class="feature-btn api-viewer">
             <i class="bi bi-eye-fill feature-icon"></i>
             <span class="feature-title">API Viewer</span>
         </a>
