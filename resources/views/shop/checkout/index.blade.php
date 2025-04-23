@@ -112,7 +112,7 @@
 <script src="https://js.stripe.com/v3/"></script>
 <script src="{{ asset('js/stripe-helper.js') }}"></script>
 <script>
-    const stripe = Stripe('{{ env('STRIPE_KEY') }}');
+    const stripe = Stripe('{{ config('services.stripe.key') }}');
     const elements = stripe.elements();
     
     const style = {

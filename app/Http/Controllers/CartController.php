@@ -28,10 +28,10 @@ class CartController extends Controller
         $total = 0;
         
         if ($cart) {
-            $items = $cart->items;
-            $total = $items->sum(function ($item) {
-                return $item->product->price * $item->quantity;
-            });
+        $items = $cart->items;
+        $total = $items->sum(function ($item) {
+            return $item->product->price * $item->quantity;
+        });
         }
         
         return view('shop.cart.index', compact('items', 'total'));
@@ -110,7 +110,7 @@ class CartController extends Controller
         $cart = Cart::where('session_id', $sessionId)->first();
         
         if (!$cart) {
-            return redirect()->route('cart.index');
+        return redirect()->route('cart.index');
         }
         
         CartItem::where('id', $id)->where('cart_id', $cart->id)->delete();
