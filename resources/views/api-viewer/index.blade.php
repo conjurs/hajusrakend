@@ -50,6 +50,10 @@
         </button>
     </div>
 
+    <div class="input-group mb-3">
+        <input type="text" id="api-token" class="form-control" placeholder="Auth Token" aria-label="API Token">
+    </div>
+
     <div id="loading-indicator" class="text-center mt-2 d-none">
         <span class="loading-text">Fetching data...</span>
     </div>
@@ -64,12 +68,14 @@
 <script>
     document.getElementById('fetch-api-btn').addEventListener('click', function() {
         const apiUrlInput = document.getElementById('api-url');
+        const apiTokenInput = document.getElementById('api-token');
         const responseContainer = document.getElementById('response-container');
         const errorContainer = document.getElementById('error-container');
         const loadingIndicator = document.getElementById('loading-indicator');
         const fetchButton = this;
 
         let apiUrl = apiUrlInput.value.trim();
+        const token = apiTokenInput.value.trim();
         responseContainer.classList.add('d-none');
         responseContainer.textContent = '';
         errorContainer.textContent = '';
@@ -86,7 +92,17 @@
         loadingIndicator.classList.remove('d-none');
         fetchButton.disabled = true;
 
-        fetch(apiUrl)
+        const headers = {
+            'Content-Type': 'application/json'
+        };
+
+        if (token) {
+            headers['Authorization'] = `Bearer ${token}`;
+        }
+
+        fetch(apiUrl, {
+            headers: headers
+        })
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status} ${response.statusText}`);
