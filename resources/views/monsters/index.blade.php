@@ -238,6 +238,7 @@
 
     {{-- Existing Monster Grid --}}
     <h1 class="page-title">Robins Horror Games Monsters</h1>
+    <a href="https://hajusrakendused.tak22parnoja.itmajakas.ee/current/public/index.php/api/monsters"><h3 class="page-title">https://hajusrakendused.tak22parnoja.itmajakas.ee/current/public/index.php/api/monsters</h3></a>
 
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4">
         @forelse ($monsters as $monster)

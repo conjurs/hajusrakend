@@ -163,9 +163,9 @@ class MonsterSeeder extends Seeder
         ]);
 
         Monster::create([
-            'title' => 'El Silbón',
+            'title' => 'El Silbon',
             'description' => 'The spirit of a man who killed his father and now wanders the plains, carrying a sack of bones and whistling a haunting tune.',
-            'behavior' => 'El Silbón\'s presence is heralded by his eerie whistle, which grows louder as he approaches. He could appear suddenly, dealing a fatal blow to anyone caught off guard. His arrival could also signal the appearance of other supernatural threats.',
+            'behavior' => 'El Silbon's presence is heralded by his eerie whistle, which grows louder as he approaches. He could appear suddenly, dealing a fatal blow to anyone caught off guard. His arrival could also signal the appearance of other supernatural threats.',
             'habitat' => 'Plains',
             'image' => null,
         ]);

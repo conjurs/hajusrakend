@@ -3,111 +3,183 @@
 @section('title', 'Checkout')
 
 @section('content')
-<div class="container py-5" style="background: #111111; min-height: 100vh;">
+<div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-lg-8">
-            <h1 class="h3 mb-4 text-white">Checkout</h1>
-
-            <div class="progress mb-4" style="height: 4px; background: rgba(255,255,255,0.1);">
-                <div class="progress-bar" role="progressbar" style="width: 66%; background: #0066FF;" aria-valuenow="66" aria-valuemin="0" aria-valuemax="100"></div>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0">Checkout</h1>
+                <a href="{{ route('cart.index') }}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Back to Cart
+                </a>
             </div>
 
-            <div class="checkout-form p-4" style="background: rgba(255,255,255,0.05); border-radius: 12px;">
-                <form action="{{ route('orders.store') }}" method="POST">
-                    @csrf
-                    
-                    <div class="mb-4">
-                        <h5 class="text-white mb-3">Contact Information</h5>
-                        <div class="mb-3">
-                            <label class="form-label text-muted">Email</label>
-                            <input type="email" name="email" class="form-control" style="background: rgba(255,255,255,0.1); border: none; color: white;" required>
+            <div class="card">
+                <div class="card-body">
+                    <form id="payment-form" action="{{ route('payment.process') }}" method="POST">
+                        @csrf
+                        
+                        <div class="mb-4">
+                            <h5 class="card-title mb-3">Contact Information</h5>
+                            <div class="mb-3">
+                                <label class="form-label">Email</label>
+                                <input type="email" name="email" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Phone</label>
+                                <input type="text" name="phone" class="form-control" required>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="mb-4">
-                        <h5 class="text-white mb-3">Shipping Address</h5>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label text-muted">First Name</label>
-                                <input type="text" name="first_name" class="form-control" style="background: rgba(255,255,255,0.1); border: none; color: white;" required>
+                        <div class="mb-4">
+                            <h5 class="card-title mb-3">Shipping Address</h5>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">First Name</label>
+                                    <input type="text" name="first_name" class="form-control" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Last Name</label>
+                                    <input type="text" name="last_name" class="form-control" required>
+                                </div>
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label text-muted">Last Name</label>
-                                <input type="text" name="last_name" class="form-control" style="background: rgba(255,255,255,0.1); border: none; color: white;" required>
+                            <div class="mb-3">
+                                <label class="form-label">Address</label>
+                                <input type="text" name="address" class="form-control" required>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">City</label>
+                                    <input type="text" name="city" class="form-control" required>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Country</label>
+                                    <input type="text" name="country" class="form-control" required>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Postal Code</label>
+                                    <input type="text" name="postal_code" class="form-control" required>
+                                </div>
                             </div>
                         </div>
-                        <div class="mb-3">
-                            <label class="form-label text-muted">Address</label>
-                            <input type="text" name="address" class="form-control" style="background: rgba(255,255,255,0.1); border: none; color: white;" required>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label text-muted">City</label>
-                                <input type="text" name="city" class="form-control" style="background: rgba(255,255,255,0.1); border: none; color: white;" required>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label text-muted">Country</label>
-                                <input type="text" name="country" class="form-control" style="background: rgba(255,255,255,0.1); border: none; color: white;" required>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label text-muted">Postal Code</label>
-                                <input type="text" name="postal_code" class="form-control" style="background: rgba(255,255,255,0.1); border: none; color: white;" required>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="mb-4">
-                        <h5 class="text-white mb-3">Payment Method</h5>
-                        <div class="mb-3">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="payment_method" id="card" value="card" checked style="background-color: #0066FF; border-color: #0066FF;">
-                                <label class="form-check-label text-white" for="card">
-                                    Credit Card
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="payment_method" id="paypal" value="paypal" style="background-color: #0066FF; border-color: #0066FF;">
-                                <label class="form-check-label text-white" for="paypal">
-                                    PayPal
-                                </label>
+                        <div class="mb-4">
+                            <h5 class="card-title mb-3">Payment Information</h5>
+                            <div id="card-element" class="form-control p-3"></div>
+                            <div id="card-errors" class="text-danger mt-2"></div>
+                            <input type="hidden" name="payment_intent_id" id="payment-intent-id">
+                        </div>
+
+                        <div class="card bg-light mb-4">
+                            <div class="card-body">
+                                <h5 class="card-title mb-3">Order Summary</h5>
+                                @foreach($items as $item)
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <span class="text-muted">{{ $item->product->name }} × {{ $item->quantity }}</span>
+                                        <span class="fw-bold">${{ number_format($item->product->price * $item->quantity, 2) }}</span>
+                                    </div>
+                                @endforeach
+                                <hr>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="text-muted">Total</span>
+                                    <span class="fw-bold">${{ number_format($total, 2) }}</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="cart-summary mt-4 p-3" style="background: rgba(255,255,255,0.05); border-radius: 8px;">
-                        <h5 class="text-white mb-3">Order Summary</h5>
-                        @foreach($items as $item)
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <span class="text-muted">{{ $item->product->name }} × {{ $item->quantity }}</span>
-                                <span class="text-white">${{ number_format($item->product->price * $item->quantity, 2) }}</span>
-                            </div>
-                        @endforeach
-                        <hr style="border-color: rgba(255,255,255,0.1);">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="text-muted">Total</span>
-                            <span class="text-white">${{ number_format($total, 2) }}</span>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary" id="submit-button">
+                                Complete Order
+                            </button>
                         </div>
-                    </div>
-
-                    <div class="d-grid gap-2 mt-4">
-                        <button type="submit" class="btn" style="background: #0066FF; color: white;">Complete Order</button>
-                        <a href="{{ route('cart.index') }}" class="btn btn-link text-muted">Return to Cart</a>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<style>
-.form-control:focus {
-    background: rgba(255,255,255,0.15);
-    border: none;
-    box-shadow: none;
-    color: white;
-}
-.form-control::placeholder {
-    color: rgba(255,255,255,0.5);
-}
-</style>
+@push('scripts')
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+    const stripe = Stripe('{{ config('services.stripe.key') }}');
+    const elements = stripe.elements();
+    const card = elements.create('card', {
+        style: {
+            base: {
+                color: '#32325d',
+                fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+                fontSmoothing: 'antialiased',
+                fontSize: '16px',
+                '::placeholder': {
+                    color: '#aab7c4'
+                }
+            },
+            invalid: {
+                color: '#fa755a',
+                iconColor: '#fa755a'
+            }
+        }
+    });
+
+    card.mount('#card-element');
+
+    card.addEventListener('change', function(event) {
+        const displayError = document.getElementById('card-errors');
+        if (event.error) {
+            displayError.textContent = event.error.message;
+        } else {
+            displayError.textContent = '';
+        }
+    });
+
+    const form = document.getElementById('payment-form');
+    const submitButton = document.getElementById('submit-button');
+
+    form.addEventListener('submit', async function(event) {
+        event.preventDefault();
+        submitButton.disabled = true;
+
+        try {
+            const response = await fetch('{{ route('payment.create-intent') }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to create payment intent');
+            }
+
+            const { clientSecret } = await response.json();
+
+            const { paymentIntent, error } = await stripe.confirmCardPayment(clientSecret, {
+                payment_method: {
+                    card: card,
+                    billing_details: {
+                        name: form.querySelector('[name="first_name"]').value + ' ' + form.querySelector('[name="last_name"]').value,
+                        email: form.querySelector('[name="email"]').value,
+                        phone: form.querySelector('[name="phone"]').value
+                    }
+                }
+            });
+
+            if (error) {
+                const errorElement = document.getElementById('card-errors');
+                errorElement.textContent = error.message;
+                submitButton.disabled = false;
+            } else {
+                document.getElementById('payment-intent-id').value = paymentIntent.id;
+                form.submit();
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            const errorElement = document.getElementById('card-errors');
+            errorElement.textContent = 'An error occurred. Please try again.';
+            submitButton.disabled = false;
+        }
+    });
+</script>
+@endpush
 @endsection 

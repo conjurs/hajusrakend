@@ -14,11 +14,9 @@ class Order extends Model
         'email',
         'first_name',
         'last_name',
-        'address',
-        'city',
-        'country',
-        'postal_code',
+        'phone',
         'payment_method',
+        'payment_intent_id',
         'total_amount',
         'status'
     ];

@@ -43,7 +43,7 @@
     
     .features-container {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(3, 1fr);
         gap: 3rem;
     }
     
@@ -129,6 +129,14 @@
         background-image: url('https://imgs.search.brave.com/VnevXyhHS5OPkjvvT4gG2LOySbVGkpq9EanzWLZlOhw/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pLnBp/bmltZy5jb20vb3Jp/Z2luYWxzLzQ2L2Ex/LzhlLzQ2YTE4ZWYw/MjU0ZThjOGZkNzll/ZDA4YzM5NzMzZDkz/LmpwZw');
     }
     
+    .feature-btn.api::before {
+        background-image: url('https://imgs.search.brave.com/BvzCzYI8fIwpLS9hIMQN2opu-Vu5r3St6VoUNrXlHDI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pLnBp/bmltZy5jb20vb3Jp/Z2luYWxzLzUwL2Nm/L2MwLzUwY2ZjMDYw/M2ZhMjcyMjhlMTEx/MmVmODYwYTliZmYz/LmpwZw');
+    }
+    
+    .feature-btn.api-viewer::before {
+        background-image: url('https://imgs.search.brave.com/S5p17ObZVjX-uk9EbU5Ma7kjrMlRWgfSLDdEs418s_w/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pLnBp/bmltZy5jb20vb3Jp/Z2luYWxzL2MwL2Jk/LzdhL2MwYmQ3YWNk/Zjg5YTc0MTljYThm/MzE4NDYzOTJhMzVk/LmpwZw');
+    }
+    
     .feature-btn:hover::before {
         opacity: 0.6;
     }
@@ -210,6 +218,16 @@
         <a href="{{ route('products.index') }}" class="feature-btn shop">
             <i class="bi bi-shop feature-icon"></i>
             <span class="feature-title">Shop</span>
+        </a>
+
+        <a href="/monsters" class="feature-btn api">
+            <i class="bi bi-code-slash feature-icon"></i>
+            <span class="feature-title">API</span>
+        </a>
+        
+        <a href="/api-viewer" class="feature-btn api-viewer">
+            <i class="bi bi-eye-fill feature-icon"></i>
+            <span class="feature-title">API Viewer</span>
         </a>
     </div>
 </div>

@@ -16,4 +16,6 @@ class Monster extends Model
         'behavior',
         'habitat'
     ];
+
+    protected $hidden = ['created_at', 'updated_at'];
 }

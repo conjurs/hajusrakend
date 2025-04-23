@@ -32,24 +32,31 @@ class OrderController extends Controller
             return redirect()->route('cart.index');
         }
 
-        $total = $cart->items->sum(function ($item) {
-            return $item->product->price * $item->quantity;
-        });
+        try {
+            $total = $cart->items->sum(function ($item) {
+                return $item->product->price * $item->quantity;
+            });
 
-        session()->flash('dummy_order', [
-            'id' => rand(1000, 9999),
-            'email' => $request->email,
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'phone' => $request->phone,
-            'payment_method' => $request->payment_method,
-            'total_amount' => $total,
-            'created_at' => now()
-        ]);
+            session()->flash('dummy_order', [
+                'id' => rand(1000, 9999),
+                'email' => $request->email,
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'phone' => $request->phone,
+                'payment_method' => $request->payment_method,
+                'total_amount' => $total,
+                'created_at' => now()
+            ]);
 
-        session()->forget('cart_session_id');
+            // Only clear the cart after successful order processing
+            $cart->items()->delete();
+            $cart->delete();
+            session()->forget('cart_session_id');
 
-        return redirect()->route('orders.success');
+            return redirect()->route('orders.success');
+        } catch (\Exception $e) {
+            return redirect()->route('cart.index')->with('error', 'An error occurred while processing your order. Please try again.');
+        }
     }
 
     public function success()

@@ -16,16 +16,14 @@ class CartController extends Controller
     public function index()
     {
         $sessionId = $this->getCartSessionId();
-        $cart = Cart::where('session_id', $sessionId)->first();
-        $items = $cart ? $cart->items : collect();
+        $cart = Cart::firstOrCreate(['session_id' => $sessionId]);
+        $items = $cart->items;
         
         $total = $items->sum(function ($item) {
             return $item->product->price * $item->quantity;
         });
-
-        $showCheckout = request()->has('checkout');
         
-        return view('shop.cart.index', compact('items', 'total', 'showCheckout'));
+        return view('shop.cart.index', compact('items', 'total'));
     }
 
     public function addToCart(Request $request)
@@ -60,25 +58,23 @@ class CartController extends Controller
     
     public function updateQuantity(Request $request, $id)
     {
-        $request->validate([
-            'quantity' => 'required|integer|min:1|max:10'
+        $validated = $request->validate([
+            'quantity' => 'required|integer|min:1|max:10',
         ]);
-
+        
         $cartItem = CartItem::findOrFail($id);
-        $cartItem->quantity = $request->quantity;
+        $cartItem->quantity = $validated['quantity'];
         $cartItem->save();
-
-        $cart = $cartItem->cart;
-        $cartTotal = $cart->items->sum(function ($item) {
+        
+        $total = $cartItem->product->price * $cartItem->quantity;
+        $cartTotal = $cartItem->cart->items->sum(function ($item) {
             return $item->product->price * $item->quantity;
         });
-
-        $itemTotal = $cartItem->product->price * $cartItem->quantity;
-
+        
         return response()->json([
             'quantity' => $cartItem->quantity,
-            'itemTotal' => number_format($itemTotal, 2),
-            'cartTotal' => number_format($cartTotal, 2)
+            'itemTotal' => number_format($total, 2),
+            'cartTotal' => number_format($cartTotal, 2),
         ]);
     }
     
@@ -115,12 +111,7 @@ class CartController extends Controller
             $cartItem->save();
         }
         
-        return redirect()->route('cart.index');
-    }
-
-    private function getCartSessionId()
-    {
-        return 'shared_cart';
+        return redirect()->route('cart.index')->with('success', 'Item added to cart');
     }
     
     /**
@@ -134,6 +125,8 @@ class CartController extends Controller
         if ($cart) {
             CartItem::where('cart_id', $cart->id)->delete();
         }
+        
+        session()->forget('cart_session_id');
         
         return redirect()->route('cart.index');
     }

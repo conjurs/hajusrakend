@@ -19,4 +19,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/monsters', [MonsterController::class, 'index']); 
+Route::get('/monsters', [MonsterController::class, 'index']);
+Route::get('/monsters/{id}', [MonsterController::class, 'show']); 

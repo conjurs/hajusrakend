@@ -8,10 +8,13 @@ trait CartSession
 {
     protected function getCartSessionId()
     {
-        if (!session()->has('cart_session_id')) {
-            session(['cart_session_id' => Str::uuid()->toString()]);
+        $sessionId = session('cart_session_id');
+        
+        if (!$sessionId) {
+            $sessionId = Str::random(40);
+            session(['cart_session_id' => $sessionId]);
         }
         
-        return session('cart_session_id');
+        return $sessionId;
     }
 } 

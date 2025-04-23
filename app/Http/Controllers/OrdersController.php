@@ -44,22 +44,29 @@ class OrdersController extends Controller
             return redirect()->route('cart.index')->with('error', 'Your cart is empty');
         }
 
-        session()->forget('cart_session_id');
+        try {
+            session()->flash('dummy_order', [
+                'id' => rand(1000, 9999),
+                'email' => $request->email,
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'phone' => $request->phone,
+                'payment_method' => $request->payment_method,
+                'total_amount' => $cart->items->sum(function ($item) {
+                    return $item->product->price * $item->quantity;
+                }),
+                'created_at' => now()
+            ]);
 
-        session()->flash('dummy_order', [
-            'id' => rand(1000, 9999),
-            'email' => $request->email,
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'phone' => $request->phone,
-            'payment_method' => $request->payment_method,
-            'total_amount' => $cart->items->sum(function ($item) {
-                return $item->product->price * $item->quantity;
-            }),
-            'created_at' => now()
-        ]);
+            // Only clear the cart after successful order processing
+            $cart->items()->delete();
+            $cart->delete();
+            session()->forget('cart_session_id');
 
-        return redirect()->route('orders.success')->with('success', 'Order placed successfully!');
+            return redirect()->route('orders.success')->with('success', 'Order placed successfully!');
+        } catch (\Exception $e) {
+            return redirect()->route('cart.index')->with('error', 'An error occurred while processing your order. Please try again.');
+        }
     }
 
     public function success()
