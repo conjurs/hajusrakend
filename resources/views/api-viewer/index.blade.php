@@ -58,7 +58,7 @@
         <span class="loading-text">Fetching data...</span>
     </div>
 
-    <div id="response-container" class="d-none"></div>
+    <div id="response-container" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4 d-none"></div>
     <div id="error-container" class="mt-2 text-center error-message"></div>
 
 </div>
@@ -77,7 +77,7 @@
         let apiUrl = apiUrlInput.value.trim();
         const token = apiTokenInput.value.trim();
         responseContainer.classList.add('d-none');
-        responseContainer.textContent = '';
+        responseContainer.innerHTML = '';
         errorContainer.textContent = '';
 
         if (!apiUrl) {
@@ -110,7 +110,16 @@
                 return response.json();
             })
             .then(data => {
-                responseContainer.textContent = JSON.stringify(data, null, 2);
+                let items = Array.isArray(data) ? data : (Array.isArray(data.data) ? data.data : [data]);
+                if (!items.length) {
+                    responseContainer.innerHTML = '<div class="col-12"><p class="text-center text-muted mt-5">No data found.</p></div>';
+                } else {
+                    responseContainer.innerHTML = items.map(item => {
+                        return `<div class=\"col\"><div class=\"card monster-card h-100\">${
+                            item.image ? `<img src=\"${item.image}\" class=\"card-img-top monster-image\" alt=\"${item.title || ''}\" style=\"height: 160px; object-fit: cover; border-top-left-radius: 8px; border-top-right-radius: 8px;\">` : `<div class=\"card-img-top-placeholder\"><i class=\"bi bi-shield-shaded icon\"></i></div>`
+                        }<div class=\"card-body\"><h5 class=\"card-title\">${item.title || ''}</h5><div><h6 class=\"description-title\">Description</h6><p class=\"card-text\">${item.description || ''}</p></div><div><h6 class=\"behavior-title\">Behavior</h6><p class=\"card-text\">${item.behavior || ''}</p></div>${item.habitat ? `<div class=\"mt-1\"><h6 class=\"habitat-title\">Habitat</h6><p class=\"card-text mb-0\">${item.habitat}</p></div>` : ''}</div></div></div>`;
+                    }).join('');
+                }
                 responseContainer.classList.remove('d-none');
             })
             .catch(error => {
