@@ -12,10 +12,15 @@ class SpotifyService
 
     public function __construct()
     {
+        // Hardcode the values temporarily for debugging
+        $clientId = "5e7761d5c95b4aada1139bceefa9c227";
+        $clientSecret = "55bea4455e8a4572b7115c91dcc7df80";
+        $redirectUrl = "https://hajusrakendused.tak22parnoja.itmajakas.ee/current/public/index.php/spotify/callback";
+
         $this->session = new Session(
-            env('SPOTIFY_CLIENT_ID'),
-            env('SPOTIFY_CLIENT_SECRET'),
-            env('SPOTIFY_REDIRECT_URL')
+            $clientId,
+            $clientSecret,
+            $redirectUrl
         );
         $this->api = new SpotifyWebAPI();
     }
