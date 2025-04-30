@@ -36,36 +36,12 @@ class SpotifyService
     public function getAccessToken($code)
     {
         $this->session->requestAccessToken($code);
-        $accessToken = $this->session->getAccessToken();
-        $refreshToken = $this->session->getRefreshToken();
-        
-        session([
-            'spotify_token' => $accessToken,
-            'spotify_refresh_token' => $refreshToken,
-            'spotify_token_expires' => time() + 3600
-        ]);
-        
-        return $accessToken;
+        return $this->session->getAccessToken();
     }
 
     public function setAccessToken($token)
     {
-        if (time() >= session('spotify_token_expires')) {
-            $this->refreshToken();
-        }
-        
-        $this->api->setAccessToken(session('spotify_token'));
-    }
-
-    private function refreshToken()
-    {
-        $this->session->refreshAccessToken(session('spotify_refresh_token'));
-        $accessToken = $this->session->getAccessToken();
-        
-        session([
-            'spotify_token' => $accessToken,
-            'spotify_token_expires' => time() + 3600
-        ]);
+        $this->api->setAccessToken($token);
     }
 
     public function getUserPlaylists()
@@ -81,8 +57,10 @@ class SpotifyService
 
     public function addTracksToPlaylist($playlistId, $trackUris)
     {
+        // Split track URIs into chunks of 100
         $chunks = array_chunk($trackUris, 100);
         
+        // Add each chunk separately
         foreach ($chunks as $chunk) {
             $this->api->addPlaylistTracks($playlistId, $chunk);
         }
