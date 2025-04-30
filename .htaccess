@@ -1,0 +1,16 @@
+Options +FollowSymLinks
+Options -Indexes
+DirectoryIndex index.php
+
+<Directory "/data01/virt118436/domeenid/www.tak22parnoja.itmajakas.ee/hajusrakendused">
+    Options +FollowSymLinks
+    AllowOverride All
+    Require all granted
+</Directory>
+
+RewriteEngine On
+RewriteBase /
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^ index.php [L] 
