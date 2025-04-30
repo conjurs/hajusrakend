@@ -17,11 +17,11 @@ class SpotifyController extends Controller
     public function index()
     {
         // Debug: Check if config values are loaded
-        dd([
-            'client_id' => config('services.spotify.client_id'),
-            'client_secret' => config('services.spotify.client_secret'),
-            'redirect' => config('services.spotify.redirect')
-        ]);
+        $config = [
+            'client_id' => "5e7761d5c95b4aada1139bceefa9c227",
+            'client_secret' => "55bea4455e8a4572b7115c91dcc7df80",
+            'redirect' => "https://hajusrakendused.tak22parnoja.itmajakas.ee/current/public/index.php/spotify/callback"
+        ];
 
         if (!session('spotify_token')) {
             return view('spotify.login', [
