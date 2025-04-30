@@ -16,6 +16,13 @@ class SpotifyController extends Controller
 
     public function index()
     {
+        // Debug: Check if config values are loaded
+        dd([
+            'client_id' => config('services.spotify.client_id'),
+            'client_secret' => config('services.spotify.client_secret'),
+            'redirect' => config('services.spotify.redirect')
+        ]);
+
         if (!session('spotify_token')) {
             return view('spotify.login', [
                 'authUrl' => $this->spotifyService->getAuthUrl()

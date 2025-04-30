@@ -15,7 +15,7 @@ class SpotifyService
         $this->session = new Session(
             config('services.spotify.client_id'),
             config('services.spotify.client_secret'),
-            config('services.spotify.redirect')
+            config('services.spotify.redirect_url')
         );
         $this->api = new SpotifyWebAPI();
     }
