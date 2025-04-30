@@ -1,6 +1,10 @@
 RewriteEngine On
 RewriteBase /current/
 
+# Allow access to the root directory
+Options +FollowSymLinks
+Options -Indexes
+
 # Redirect to remove /public/index.php
 RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s/+current/public/index\.php/([^\s]*) [NC]
 RewriteRule ^ %1 [R=301,L]
@@ -9,3 +13,14 @@ RewriteRule ^ %1 [R=301,L]
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^(.*)$ public/index.php/$1 [L]
+
+# Set default directory index
+DirectoryIndex index.php
+
+# Allow access to all
+<IfModule mod_authz_core.c>
+    Require all granted
+</IfModule>
+<IfModule !mod_authz_core.c>
+    Allow from all
+</IfModule>

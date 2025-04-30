@@ -1,5 +1,13 @@
 RewriteEngine On
 
+# Allow access to all
+<IfModule mod_authz_core.c>
+    Require all granted
+</IfModule>
+<IfModule !mod_authz_core.c>
+    Allow from all
+</IfModule>
+
 # Handle Authorization Header
 RewriteCond %{HTTP:Authorization} .
 RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
@@ -13,3 +21,10 @@ RewriteRule ^ %1 [L,R=301]
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^ index.php [L]
+
+# Set default directory index
+DirectoryIndex index.php
+
+# Enable directory listing
+Options +FollowSymLinks
+Options -Indexes
