@@ -1,23 +1,22 @@
 RewriteEngine On
 
-# Allow access to all
-<IfModule mod_authz_core.c>
+# Set directory permissions
+<Directory "/data01/virt118436/domeenid/www.tak22parnoja.itmajakas.ee/hajusrakendused/current/public">
+    Options +FollowSymLinks
+    AllowOverride All
     Require all granted
-</IfModule>
-<IfModule !mod_authz_core.c>
-    Allow from all
-</IfModule>
+</Directory>
 
 # Handle Authorization Header
 RewriteCond %{HTTP:Authorization} .
 RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
-# Redirect Trailing Slashes If Not A Folder...
+# Redirect Trailing Slashes
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_URI} (.+)/$
 RewriteRule ^ %1 [L,R=301]
 
-# Send Requests To Front Controller...
+# Handle Front Controller
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^ index.php [L]
