@@ -14,6 +14,7 @@ use App\Http\Controllers\MonsterPageController;
 use App\Http\Controllers\ApiViewerController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\SpotifyController;
 
 Route::get('/', function () {
     return view('home');
@@ -86,4 +87,8 @@ Route::get('/api-viewer', [ApiViewerController::class, 'index'])->name('api-view
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 });
+
+Route::get('/spotify', [SpotifyController::class, 'index'])->name('spotify.index');
+Route::get('/spotify/callback', [SpotifyController::class, 'callback'])->name('spotify.callback');
+Route::post('/spotify/add-tracks', [SpotifyController::class, 'addTracks'])->name('spotify.add-tracks');
     
