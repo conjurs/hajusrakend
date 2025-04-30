@@ -13,9 +13,9 @@ class SpotifyService
     public function __construct()
     {
         $this->session = new Session(
-            config('services.spotify.client_id'),
-            config('services.spotify.client_secret'),
-            config('services.spotify.redirect_url')
+            env('SPOTIFY_CLIENT_ID'),
+            env('SPOTIFY_CLIENT_SECRET'),
+            env('SPOTIFY_REDIRECT_URL')
         );
         $this->api = new SpotifyWebAPI();
     }
