@@ -1,1 +1,1 @@
-hajusrakendused
+hajusrakenduseda
