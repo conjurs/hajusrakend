@@ -1,23 +1,34 @@
-Options +FollowSymLinks
-Options -Indexes
-DirectoryIndex index.php
-
 <IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteBase /
-
+    
+    # Handle Authorization Header
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+    
+    # Redirect Trailing Slashes If Not A Folder...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteRule ^ %1 [L,R=301]
+    
+    # Send Requests To Front Controller...
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
 </IfModule>
 
-<Directory "/data01/virt118436/domeenid/www.tak22parnoja.itmajakas.ee/hajusrakendused/current/public">
-    Options +FollowSymLinks
-    AllowOverride All
+# Allow access to this directory
+<IfModule mod_authz_core.c>
     Require all granted
-    Order allow,deny
-    Allow from all
-</Directory>
+</IfModule>
+
+# Set proper options
+Options +FollowSymLinks
+Options -MultiViews
+Options -Indexes
+
+# Set default index
+DirectoryIndex index.php
 
 # Set directory permissions
 <Directory "/data01/virt118436/domeenid/www.tak22parnoja.itmajakas.ee/hajusrakendused/current/public">
@@ -25,9 +36,6 @@ DirectoryIndex index.php
     AllowOverride All
     Require all granted
 </Directory>
-
-# Set default directory index
-DirectoryIndex index.php
 
 # Enable directory listing
 Options +FollowSymLinks
