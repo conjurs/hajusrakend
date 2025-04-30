@@ -66,9 +66,8 @@ class SpotifyController extends Controller
 
         if (!empty($trackUris)) {
             $this->spotifyService->addTracksToPlaylist($request->playlist_id, $trackUris);
-            return redirect()->route('spotify.index')->with('success', 'Tracks added successfully!');
         }
 
-        return redirect()->route('spotify.index')->with('error', 'No tracks were found to add.');
+        return redirect()->route('spotify.index');
     }
 } 
