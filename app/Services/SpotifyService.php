@@ -57,6 +57,14 @@ class SpotifyService
 
     public function addTracksToPlaylist($playlistId, $trackUris)
     {
-        return $this->api->addPlaylistTracks($playlistId, $trackUris);
+        // Split track URIs into chunks of 100
+        $chunks = array_chunk($trackUris, 100);
+        
+        // Add each chunk separately
+        foreach ($chunks as $chunk) {
+            $this->api->addPlaylistTracks($playlistId, $chunk);
+        }
+        
+        return true;
     }
 } 
