@@ -36,12 +36,36 @@ class SpotifyService
     public function getAccessToken($code)
     {
         $this->session->requestAccessToken($code);
-        return $this->session->getAccessToken();
+        $accessToken = $this->session->getAccessToken();
+        $refreshToken = $this->session->getRefreshToken();
+        
+        session([
+            'spotify_token' => $accessToken,
+            'spotify_refresh_token' => $refreshToken,
+            'spotify_token_expires' => time() + 3600
+        ]);
+        
+        return $accessToken;
     }
 
     public function setAccessToken($token)
     {
-        $this->api->setAccessToken($token);
+        if (time() >= session('spotify_token_expires')) {
+            $this->refreshToken();
+        }
+        
+        $this->api->setAccessToken(session('spotify_token'));
+    }
+
+    private function refreshToken()
+    {
+        $this->session->refreshAccessToken(session('spotify_refresh_token'));
+        $accessToken = $this->session->getAccessToken();
+        
+        session([
+            'spotify_token' => $accessToken,
+            'spotify_token_expires' => time() + 3600
+        ]);
     }
 
     public function getUserPlaylists()
